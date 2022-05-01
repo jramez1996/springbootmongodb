@@ -18,15 +18,29 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.bezkoder.spring.data.mongodb.model.Tutorial;
+//import com.bezkoder.spring.data.mongodb.model.Tutorial;
 import com.bezkoder.spring.data.mongodb.repository.TutorialRepository;
+import com.bezkoder.spring.data.mongodb.service.CocheService;
 
+import com.bezkoder.spring.data.mongodb.model.*;
 //@CrossOrigin(origins = "http://localhost:8080")
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping("/api")
 public class TutorialController {
+
+  @Autowired
+  CocheService cocheGenarator;
+
+  //@GetMapping("/dataApi")
+  @RequestMapping(value = "/template/products")
+	public  Object[]  getProductList() {
+		Person[] arrayDat=cocheGenarator.listaApi();
+		System.out.println(arrayDat[0].email);
+	   return arrayDat;
+	}
+
 
   @Autowired
   TutorialRepository tutorialRepository;
@@ -61,9 +75,7 @@ public class TutorialController {
 
   @PostMapping("/tutorials")
   public ResponseEntity<Tutorial> createTutorial(@RequestBody Tutorial tutorial) {
-    System.out.println("okkkkk");
     try {
-      System.out.println("okkkkk");
       Tutorial _tutorial = tutorialRepository.save(new Tutorial(tutorial.getTitle(), tutorial.getDescription(), false));
       return new ResponseEntity<>(_tutorial, HttpStatus.CREATED);
     } catch (Exception e) {
